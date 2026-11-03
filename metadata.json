@@ -1,0 +1,6 @@
+{
+  "name": "FAIRFLOW",
+  "description": "Fair Access & Dynamic Inventory Reservation System - Research prototype and simulation architecture for high-demand reservations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

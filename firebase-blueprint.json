@@ -1,0 +1,113 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "Represents an authenticated railway passenger profile.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique Firebase Auth UID" },
+        "email": { "type": "string", "format": "email", "description": "Passenger email address" },
+        "displayName": { "type": "string", "description": "Passenger full name" },
+        "role": { "type": "string", "enum": ["passenger", "admin"], "description": "Role in reservation system" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Account registration timestamp" }
+      },
+      "required": ["id", "email", "role"]
+    },
+    "Booking": {
+      "title": "Train Booking",
+      "description": "Confirmed or waitlisted train ticket reservation.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Booking document ID" },
+        "userId": { "type": "string", "description": "Passenger Firebase UID" },
+        "pnr": { "type": "string", "description": "10-digit Passenger Name Record" },
+        "trainNumber": { "type": "string", "description": "Train number" },
+        "trainName": { "type": "string", "description": "Train express name" },
+        "fromStation": { "type": "string", "description": "Source station code" },
+        "toStation": { "type": "string", "description": "Destination station code" },
+        "journeyDate": { "type": "string", "description": "Date of travel" },
+        "travelClass": { "type": "string", "description": "Class of travel (1A, 2A, 3A, SL, CC)" },
+        "quota": { "type": "string", "enum": ["General", "Tatkal", "Premium Tatkal", "Ladies", "Senior Citizen"], "description": "Reservation quota" },
+        "fare": { "type": "number", "description": "Total fare in INR" },
+        "status": { "type": "string", "description": "Current PNR status (CNF, RAC, WL)" },
+        "stationClearanceTokenId": { "type": "string", "description": "QR clearance token if booked on station" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Booking creation timestamp" }
+      },
+      "required": ["id", "userId", "pnr", "trainNumber", "fare", "status"]
+    },
+    "Complaint": {
+      "title": "Passenger Complaint",
+      "description": "RailMadad service or emergency assistance complaint lodged by passenger.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Complaint tracking reference ID" },
+        "userId": { "type": "string", "description": "Passenger Firebase UID" },
+        "pnr": { "type": "string", "description": "Associated 10-digit PNR" },
+        "category": { "type": "string", "enum": ["cleanliness", "electrical", "catering", "security", "medical", "staff"], "description": "Complaint nature" },
+        "trainNumber": { "type": "string", "description": "Train number" },
+        "coach": { "type": "string", "description": "Coach number (e.g. B4, S3, A1)" },
+        "berth": { "type": "string", "description": "Berth or seat number" },
+        "description": { "type": "string", "description": "Details of the passenger complaint" },
+        "status": { "type": "string", "enum": ["Registered", "Assigned", "In-Progress", "Resolved"], "description": "Resolution status" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Complaint registration timestamp" }
+      },
+      "required": ["id", "userId", "category", "description", "status"]
+    },
+    "MealOrder": {
+      "title": "E-Catering Meal Order",
+      "description": "Pantry car and e-catering food order delivered to seat.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Meal order identifier" },
+        "userId": { "type": "string", "description": "Passenger Firebase UID" },
+        "pnr": { "type": "string", "description": "Travel PNR number" },
+        "items": { "type": "string", "description": "Summary or JSON array of food items" },
+        "totalPrice": { "type": "number", "description": "Total order amount in INR" },
+        "deliveryStation": { "type": "string", "description": "Station where food is delivered" },
+        "coach": { "type": "string", "description": "Coach number" },
+        "seat": { "type": "string", "description": "Seat number" },
+        "status": { "type": "string", "description": "Order status (Preparing, In Transit, Delivered)" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Order placement timestamp" }
+      },
+      "required": ["id", "userId", "items", "totalPrice", "status"]
+    },
+    "StationVerification": {
+      "title": "Station Safety Clearance Token",
+      "description": "Verified clearance proving user is safe at station concourse or kiosk, unlocking restricted track area booking.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Token unique identifier" },
+        "userId": { "type": "string", "description": "Passenger Firebase UID" },
+        "stationCode": { "type": "string", "description": "Station code (NDLS, CSMT, etc.)" },
+        "stationName": { "type": "string", "description": "Station official name" },
+        "verifiedAt": { "type": "string", "format": "date-time", "description": "Verification time" },
+        "expiresAt": { "type": "string", "format": "date-time", "description": "Token expiry timestamp" },
+        "verificationMethod": { "type": "string", "enum": ["QR_SCAN", "STATION_MASTER_KIOSK"], "description": "Method of physical clearance" },
+        "isSafetyCleared": { "type": "boolean", "description": "Whether track safety block is unlocked" }
+      },
+      "required": ["id", "userId", "stationCode", "isSafetyCleared"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "User" },
+      "description": "Passenger user profile root document"
+    },
+    "/users/{userId}/bookings/{bookingId}": {
+      "schema": { "$ref": "Booking" },
+      "description": "Passenger ticket reservation records"
+    },
+    "/users/{userId}/complaints/{complaintId}": {
+      "schema": { "$ref": "Complaint" },
+      "description": "RailMadad complaints filed by passenger"
+    },
+    "/users/{userId}/mealOrders/{orderId}": {
+      "schema": { "$ref": "MealOrder" },
+      "description": "Food and pantry orders placed by passenger"
+    },
+    "/users/{userId}/stationVerifications/{tokenId}": {
+      "schema": { "$ref": "StationVerification" },
+      "description": "Station QR verification tokens issued for track perimeter unlocking"
+    }
+  }
+}
