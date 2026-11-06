@@ -183,6 +183,7 @@ function AppContent() {
             activeScenario={activeScenario}
             onScenarioChange={handleScenarioChange}
             onViewApplication={handleViewApplication}
+            onProceedToBooking={handleProceedToBooking}
           />
         )}
 

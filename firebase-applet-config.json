@@ -3,6 +3,7 @@
   "appId": "1:169400785902:web:9b1ff44b7ad126bba0ccff",
   "apiKey": "AIzaSyCj6-KmSk2w3x16f4kElbKq2nMgjksfDHg",
   "authDomain": "arboreal-fact-fmn89.firebaseapp.com",
+  "firestoreDatabaseId": "ai-studio-47fe7d8e-36cb-40d5-a43a-dad3ebffa927",
   "storageBucket": "arboreal-fact-fmn89.firebasestorage.app",
   "messagingSenderId": "169400785902",
   "measurementId": "",

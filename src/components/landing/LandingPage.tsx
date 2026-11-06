@@ -248,20 +248,27 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <h1 className="text-xl sm:text-3xl font-black text-white tracking-tight">
               Reserve Train Tickets & Services
             </h1>
-            <p className="text-xs text-blue-200/90 font-sans mt-0.5">
+            <p
+              className="text-xs text-white !text-white font-sans mt-0.5"
+              style={{ color: '#ffffff' }}
+            >
               Decoupled intake queues • Anti-bot stampede protection • Seamless Tatkal booking
             </p>
           </div>
 
           {/* Tatkal Opening Schedule Ticker */}
           <div className="flex items-center gap-2 bg-[#001D3D] p-2.5 rounded-xl border border-blue-800 text-xs self-start md:self-auto shrink-0">
-            <Clock className="w-4 h-4 text-amber-400 shrink-0" />
+            <Clock className="w-4 h-4 text-white shrink-0" style={{ color: '#ffffff' }} />
             <div className="leading-tight">
-              <div className="text-[10px] text-white uppercase font-mono" style={{ color: '#ffffff' }}>Tatkal Opening Windows</div>
-              <div className="font-bold text-white flex items-center gap-2">
-                <span>AC: <strong className="text-amber-400">10:00 AM</strong></span>
-                <span className="text-blue-400">•</span>
-                <span>Non-AC: <strong className="text-emerald-400">11:00 AM</strong></span>
+              <div className="text-[10px] text-white !text-white uppercase font-mono" style={{ color: '#ffffff' }}>Tatkal Opening Windows</div>
+              <div className="font-bold text-white !text-white flex items-center gap-2" style={{ color: '#ffffff' }}>
+                <span className="text-white !text-white" style={{ color: '#fdfdfd' }}>
+                  AC: <strong className="text-white !text-white font-bold" style={{ color: '#fdfdfd' }}>10:00 AM</strong>
+                </span>
+                <span className="text-white !text-white opacity-90 border" style={{ borderColor: '#ffffff', color: '#ffffff' }}>•</span>
+                <span className="text-white !text-white" style={{ color: '#ffffff' }}>
+                  Non-AC: <strong className="text-white !text-white font-bold" style={{ color: '#ffffff' }}>11:00 AM</strong>
+                </span>
               </div>
             </div>
           </div>
@@ -364,7 +371,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 className="flex-1 py-2 px-3 rounded-lg bg-[#0B2545] hover:bg-[#002244] border border-blue-700 text-amber-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-sm"
               >
                 <Search className="w-3.5 h-3.5" />
-                <span>Search</span>
+                <span style={{ color: '#ffffff' }}>Search</span>
               </button>
               <button
                 type="button"

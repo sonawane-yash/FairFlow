@@ -58,11 +58,13 @@ export const Header: React.FC<HeaderProps> = ({
   const [scenarioDropdownOpen, setScenarioDropdownOpen] = useState(false);
   const [accessibilityModalOpen, setAccessibilityModalOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [mobileProfileDropdownOpen, setMobileProfileDropdownOpen] = useState(false);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [profileModalTab, setProfileModalTab] = useState<ProfileModalTab>('update-profile');
   const [isTickerPaused, setIsTickerPaused] = useState(false);
 
   const profileMenuRef = useRef<HTMLDivElement>(null);
+  const mobileProfileMenuRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme, language, fontSize, t } = useAccessibility();
   const { currentUser, isLoggedIn, openLoginModal, logout, triggerLoginRequired } = useAuth();
 
@@ -71,6 +73,9 @@ export const Header: React.FC<HeaderProps> = ({
     const handleClickOutside = (e: MouseEvent) => {
       if (profileMenuRef.current && !profileMenuRef.current.contains(e.target as Node)) {
         setProfileDropdownOpen(false);
+      }
+      if (mobileProfileMenuRef.current && !mobileProfileMenuRef.current.contains(e.target as Node)) {
+        setMobileProfileDropdownOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -181,7 +186,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-18">
+          <div className="flex items-center justify-between h-14 sm:h-18">
             {/* LEFT SECTION: Horizontal Three Lines Menu Button shifted to Top Left Corner + Brand Logo */}
             <div className="flex items-center gap-3 sm:gap-4">
               {/* SHIFTED TO TOP LEFT CORNER: Main Menu Option (Horizontal Three Lines) */}
@@ -264,8 +269,8 @@ export const Header: React.FC<HeaderProps> = ({
 
 
 
-            {/* TOP RIGHT SECTION: Theme Switch + Accessibility Button + Profile Button + 100K Tatkal Demo */}
-            <div className="flex items-center gap-2 sm:gap-2.5">
+            {/* TOP RIGHT SECTION (Desktop & Tablet): Theme Switch + Accessibility Button + Profile Button */}
+            <div className="hidden sm:flex items-center gap-2 sm:gap-2.5">
               {/* 1. SWITCH BUTTON: Switching between Light Mode and Dark Mode */}
               <button
                 id="theme-toggle-switch"
@@ -501,6 +506,230 @@ export const Header: React.FC<HeaderProps> = ({
 
 
             </div>
+          </div>
+        </div>
+
+        {/* MOBILE HEAD BAR INTERFACE (< sm): Dark Mode, Accessibility, and Login/Profile placed below the top bar so users don't need to scroll/slide left to right */}
+        <div className="sm:hidden bg-[#001730] border-t border-blue-900/70 px-3 py-1.5 transition-colors">
+          <div className="flex items-center justify-between gap-2 max-w-md mx-auto">
+            {/* 1. Dark Mode Toggle Switch for Mobile */}
+            <button
+              id="mobile-theme-toggle-switch"
+              type="button"
+              onClick={toggleTheme}
+              aria-label={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              title={theme === 'dark' ? 'सक्रिय: डार्क मोड (क्लिक करें: लाइट मोड) / Active: Dark Mode (Click for Light Mode)' : 'सक्रिय: लाइट मोड (क्लिक करें: डार्क मोड) / Active: Light Mode (Click for Dark Mode)'}
+              className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl bg-[#001D3D] active:bg-[#002855] border border-blue-800 text-slate-200 transition-all text-xs font-mono font-bold shadow-xs cursor-pointer"
+            >
+              <div
+                className={`relative w-7 h-4 rounded-full p-0.5 flex items-center transition-colors duration-300 ${
+                  theme === 'dark'
+                    ? 'bg-[#1E3A8A] border border-amber-400/60'
+                    : 'bg-slate-800 border border-slate-600'
+                }`}
+              >
+                <div
+                  className={`w-3 h-3 rounded-full flex items-center justify-center transition-all duration-300 ${
+                    theme === 'dark'
+                      ? 'translate-x-3 bg-amber-400 text-slate-950 shadow-[0_0_6px_#fbbf24]'
+                      : 'translate-x-0 bg-amber-300 text-slate-900 shadow-sm'
+                  }`}
+                >
+                  {theme === 'dark' ? (
+                    <Moon className="w-2 h-2 text-slate-950" />
+                  ) : (
+                    <Sun className="w-2 h-2 text-slate-950" />
+                  )}
+                </div>
+              </div>
+              <span className="text-[11px] text-slate-200">
+                {theme === 'dark' ? 'Dark' : 'Light'}
+              </span>
+            </button>
+
+            {/* 2. Accessibility Options Button for Mobile */}
+            <button
+              id="mobile-accessibility-options-btn"
+              type="button"
+              onClick={() => setAccessibilityModalOpen(true)}
+              aria-label="Accessibility options: Language, Font Size, Contrast"
+              title="सुगमता एवं भाषा विकल्प / Accessibility & Multilingual Options"
+              className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl bg-[#001D3D] active:bg-[#002855] border border-blue-800 text-slate-200 transition-all text-xs shadow-xs cursor-pointer"
+            >
+              <div className="w-5 h-5 rounded-lg bg-blue-900/60 border border-blue-700/60 flex items-center justify-center text-amber-300">
+                <Eye className="w-3 h-3" />
+              </div>
+              <span className="text-[11px] font-mono font-bold text-amber-300 uppercase">
+                [{language}]
+              </span>
+            </button>
+
+            {/* 3. Login / Profile Button for Mobile */}
+            {!isLoggedIn ? (
+              <button
+                id="mobile-header-login-btn"
+                type="button"
+                onClick={openLoginModal}
+                aria-label="User Login"
+                title="आईआरसीटीसी लॉगिन / IRCTC Passenger Login"
+                className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] text-white transition-all shadow-md font-bold text-xs cursor-pointer active:scale-95 shrink-0"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span>Login</span>
+              </button>
+            ) : (
+              <div className="relative flex-1" ref={mobileProfileMenuRef}>
+                <button
+                  id="mobile-user-profile-btn"
+                  type="button"
+                  onClick={() => setMobileProfileDropdownOpen(!mobileProfileDropdownOpen)}
+                  aria-expanded={mobileProfileDropdownOpen}
+                  aria-label="User Profile & Account Menu"
+                  title="यात्री प्रोफ़ाइल एवं सेटिंग्स / Passenger Profile & Settings"
+                  className="w-full flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl bg-[#001D3D] active:bg-[#002855] border border-blue-800 text-slate-200 transition-all shadow-xs cursor-pointer"
+                >
+                  <div className="w-5 h-5 rounded-md bg-[#EA580C] text-white font-black flex items-center justify-center text-[10px] font-ticket shadow-xs shrink-0">
+                    {currentUser?.avatarInitials || 'IR'}
+                  </div>
+                  <span className="text-[11px] font-bold text-white truncate max-w-[65px]">
+                    {currentUser?.fullName?.split(' ')[0] || 'User'}
+                  </span>
+                  <ChevronDown
+                    className={`w-3 h-3 text-amber-300 transition-transform ${
+                      mobileProfileDropdownOpen ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+
+                {/* Mobile Profile Dropdown Menu */}
+                {mobileProfileDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-72 rounded-2xl border border-slate-200 shadow-2xl p-2.5 z-50 animate-in fade-in zoom-in-95 bg-white text-slate-900">
+                    <div className="p-3 rounded-xl bg-[#0B2545] text-white mb-2">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-10 h-10 rounded-xl bg-[#EA580C] text-white font-black flex items-center justify-center text-sm font-ticket shadow-md">
+                          {currentUser?.avatarInitials || 'IR'}
+                        </div>
+                        <div>
+                          <div className="text-xs font-black text-white font-ticket flex items-center gap-1">
+                            <span>{currentUser?.fullName}</span>
+                            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                          </div>
+                          <div className="text-[10px] text-amber-200/90 font-mono truncate max-w-[180px]">
+                            {currentUser?.email}
+                          </div>
+                          <div className="text-[9px] text-slate-300 font-mono">
+                            IRCTC ID: @{currentUser?.username}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMobileProfileDropdownOpen(false);
+                          handleNavigateToBookings();
+                        }}
+                        className="w-full p-2.5 rounded-xl text-left transition-colors flex items-center gap-3 group hover:bg-slate-50 text-slate-800"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-blue-50 text-[#1D4ED8] flex items-center justify-center group-hover:bg-[#1D4ED8] group-hover:text-white transition-colors">
+                          <Ticket className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="text-xs font-bold flex items-center justify-between">
+                            <span>My Bookings / मेरे टिकट</span>
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono font-bold">
+                              Active
+                            </span>
+                          </div>
+                          <p className="text-[10px] text-slate-500 font-sans">
+                            View active PNRs, ERS slips & cancellation
+                          </p>
+                        </div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMobileProfileDropdownOpen(false);
+                          handleOpenProfileTab('update-profile');
+                        }}
+                        className="w-full p-2.5 rounded-xl text-left transition-colors flex items-center gap-3 group hover:bg-slate-50 text-slate-800"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-orange-50 text-[#EA580C] flex items-center justify-center group-hover:bg-[#EA580C] group-hover:text-white transition-colors">
+                          <UserCheck className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="text-xs font-bold">
+                            Update Profile / प्रोफ़ाइल अपडेट
+                          </div>
+                          <p className="text-[10px] text-slate-500 font-sans">
+                            Name, Aadhaar KYC, master passenger list
+                          </p>
+                        </div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMobileProfileDropdownOpen(false);
+                          handleOpenProfileTab('settings');
+                        }}
+                        className="w-full p-2.5 rounded-xl text-left transition-colors flex items-center gap-3 group hover:bg-slate-50 text-slate-800"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:bg-emerald-700 group-hover:text-white transition-colors">
+                          <Settings className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="text-xs font-bold">
+                            Settings / सेटिंग्स
+                          </div>
+                          <p className="text-[10px] text-slate-500 font-sans">
+                            Auto-upgrade, alerts & payment gateway
+                          </p>
+                        </div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMobileProfileDropdownOpen(false);
+                          logout();
+                        }}
+                        className="w-full p-2.5 rounded-xl text-left transition-colors flex items-center gap-3 group hover:bg-rose-50 text-rose-700"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center group-hover:bg-rose-600 group-hover:text-white transition-colors">
+                          <LogOut className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="text-xs font-bold">
+                            Log Out / लॉग आउट
+                          </div>
+                          <p className="text-[10px] text-rose-500 font-sans">
+                            Sign out of this passenger account
+                          </p>
+                        </div>
+                      </button>
+                    </div>
+
+                    <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between px-2 text-[10px] text-slate-500 font-sans">
+                      <span className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse" />
+                        <span>Protected • 1h Auto-Logout</span>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setMobileProfileDropdownOpen(false)}
+                        className="text-[#EA580C] font-semibold hover:underline"
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 

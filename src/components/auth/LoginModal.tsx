@@ -338,7 +338,7 @@ export const LoginModal: React.FC = () => {
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-amber-500" />
                 <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white font-ticket">
-                  Standard Synthetic Account Credentials / मानक सिंथेटिक खाते
+                  Standard Synthetic Account Credential / मानक सिंथेटिक खाता
                 </h3>
               </div>
               <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
@@ -347,7 +347,7 @@ export const LoginModal: React.FC = () => {
             </div>
 
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-              Use these official synthetic test credentials to test authentication, explore live Tatkal booking, and access IRCTC services:
+              Use this official synthetic test credential to test authentication, explore live Tatkal booking, and access IRCTC services:
             </p>
 
             <div className="space-y-2.5">
